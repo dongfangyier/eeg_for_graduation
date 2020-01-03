@@ -1,4 +1,4 @@
-# lstm model
+# cnn model
 import numpy as np
 from numpy import mean
 from numpy import std
