@@ -2,6 +2,7 @@ import mne
 import numpy as np
 import pandas as pd
 import CONST
+import os
 
 pick_len = CONST.channel_count
 
@@ -227,10 +228,10 @@ def eeg_psd(control_raw, patient_raw):
 
         df_p_gamma.loc[len(df_p_gamma)] = temp
 
-    df_p_delta.to_csv('data/psd_p_delta.csv', index=True)
-    df_p_theta.to_csv('data/psd_p_theta.csv', index=True)
-    df_p_alpha1.to_csv('data/psd_p_alpha1.csv', index=True)
-    df_p_alpha2.to_csv('data/psd_p_alpha2.csv', index=True)
-    df_p_beta.to_csv('data/psd_p_beta.csv', index=True)
-    df_p_gamma.to_csv('data/psd_p_gamma.csv', index=True)
+    df_p_delta.to_csv(os.path.join(CONST.features_path, 'psd_p_delta.csv'), index=True)
+    df_p_theta.to_csv(os.path.join(CONST.features_path, 'psd_p_theta.csv'), index=True)
+    df_p_alpha1.to_csv(os.path.join(CONST.features_path, 'psd_p_alpha1.csv'), index=True)
+    df_p_alpha2.to_csv(os.path.join(CONST.features_path, 'psd_p_alpha2.csv'), index=True)
+    df_p_beta.to_csv(os.path.join(CONST.features_path, 'psd_p_beta.csv'), index=True)
+    df_p_gamma.to_csv(os.path.join(CONST.features_path, 'psd_p_gamma.csv'), index=True)
     print(bigerror)

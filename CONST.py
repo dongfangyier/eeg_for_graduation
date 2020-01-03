@@ -24,6 +24,9 @@ low_filter_n = 40
 # resample
 resample_n = 160
 
+# the path of calculate features saving csv
+features_path = "data"
+
 
 
 

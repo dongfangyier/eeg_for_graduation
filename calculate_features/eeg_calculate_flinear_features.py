@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from tsfresh.feature_extraction import feature_calculators
 import CONST
+import os
 
 """
 naming rules
@@ -221,7 +222,7 @@ def eeg_linear_features(control_raw, patient_raw):
         print('control: ' + str(counter))
         counter += 1
     df.reset_index(drop=True)
-    df.to_csv('data/c_features.csv', index=True)
+    df.to_csv(os.path.join(CONST.features_path, 'c_features.csv'), index=True)
 
     df = None
 
@@ -239,5 +240,5 @@ def eeg_linear_features(control_raw, patient_raw):
         print('patient: ' + str(counter))
         counter += 1
     df.reset_index(drop=True)
-    df.to_csv('data/p_features.csv', index=True)
+    df.to_csv(os.path.join(CONST.features_path, 'p_features.csv'), index=True)
     print(bigerror)
