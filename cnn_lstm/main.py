@@ -3,13 +3,9 @@
 import os
 import mne
 import check_file
-import calculate_features.eeg_calculate_linear_features as linear_feayures
-import calculate_features.eeg_features_psd as psd
-import calculate_features.eeg_features_dfa as dfa
-import calculate_features.eeg_features_hfd as hfd
-import calculate_features.eeg_features_hjorth as hjorth
-import calculate_features.eeg_features_spectral_entropy as sp
-import calculate_features.eeg_features_pfd as pfd
+import cnn_lstm.preprocess_data as preprocess_data
+import cnn_lstm.deep_learn as deep_learn
+
 
 """
 sometimes our thread will be interrupted, so the script preprocessing in their own step. 
@@ -150,21 +146,8 @@ if __name__ == "__main__":
     print('control: ' + str(len(control_raw)))
     print('patient: ' + str(len(patient_raw)))
 
-    print("calculate features ...")
-    print("linear festures ...")
-    linear_feayures.eeg_linear_features(control_raw.copy(), patient_raw.copy())
-    print("psd ...")
-    psd.eeg_psd(control_raw.copy(), patient_raw.copy())
-    print("dfa ...")
-    dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
-    print("dfa ...")
-    dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
-    print("hfd ...")
-    hfd.eeg_hfd(control_raw.copy(), patient_raw.copy())
-    print("hjorth ...")
-    hjorth.eeg_hjorth(control_raw.copy(), patient_raw.copy())
-    print("spectral_entropy ...")
-    sp.eeg_spectral_entropy(control_raw.copy(), patient_raw.copy())
-    print("pfd ...")
-    pfd.eeg_pfd(control_raw.copy(), patient_raw.copy())
-    print("end features ...")
+    print("preprocess data ...")
+    _x, _y = preprocess_data.start(control_raw, patient_raw)
+
+    print("deep learn ...")
+    deep_learn.start(_x, _y)
