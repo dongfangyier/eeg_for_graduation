@@ -9,6 +9,8 @@ from sklearn.metrics import precision_score, recall_score, accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn import metrics
+import CONST
+import os
 
 
 '''
@@ -247,7 +249,7 @@ def k_cv_3():
         acc_pd.loc[len(acc_pd)] = temp
 
     acc_pd.loc['mean'] = acc_pd.mean()
-    acc_pd.to_csv('all_analyze/classify/test_mrmr_gamma_35_classify_ck.csv')
+    acc_pd.to_csv(os.path.join(CONST.classify_mrmr_path, 'test_mrmr_gamma_35_classify_ck.csv'))
 
 
 k_cv_3()

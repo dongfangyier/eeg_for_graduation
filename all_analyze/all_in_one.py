@@ -20,7 +20,13 @@ psd_patient_name = ['psd_p_alpha1.csv', 'psd_p_alpha2.csv', 'psd_p_beta.csv', 'p
 
 
 
-def read_file(control, patient):
+def concact_file(control, patient):
+    """
+    concat patient csv and control csv into one csv and add column named "type"
+    :param control:
+    :param patient:
+    :return:
+    """
     c_df = pd.read_csv(os.path.join(CONST.features_path, control))
     c_df['type'] = 0
     p_df = pd.read_csv(os.path.join(CONST.features_path, patient))
@@ -33,6 +39,12 @@ def read_file(control, patient):
 
 
 def read_psd_file(control, patient):
+    """
+    handled psd file because psd is not as same as other features
+    :param control:
+    :param patient:
+    :return:
+    """
     c_df = pd.read_csv(os.path.join(CONST.features_path,  control))
 
     p_df = pd.read_csv(os.path.join(CONST.features_path,  patient))
@@ -54,6 +66,10 @@ def read_psd_file(control, patient):
 
 
 def get_psd():
+    """
+    handled psd file
+    :return:
+    """
     df = None
     for i in range(len(psd_control_name)):
         temp = read_psd_file(psd_control_name[i], psd_patient_name[i])
@@ -64,10 +80,14 @@ def get_psd():
     return df
 
 
-def all_in_one():
+def start():
+    """
+    main function in this script to get an whole file which get all features
+    :return:
+    """
     df = None
     for i in range(len(control_file)):
-        temp = read_file(control_file[i], patient_file[i])
+        temp = concact_file(control_file[i], patient_file[i])
         if df is None:
             df = temp
         else:
@@ -78,7 +98,5 @@ def all_in_one():
     print(df)
 
     df = pd.merge(psd_df, df, on='AAeid')
-    df.to_csv(os.path.join(CONST.features_path, 'all_in_one_data.csv'), index=False)
+    df.to_csv(os.path.join(CONST.all_features_path, 'all_in_one_data.csv'), index=False)
 
-
-all_in_one()

@@ -2,6 +2,8 @@
 define several static config in this script
 """
 
+import os
+
 
 # the number of channels
 channel_count = 62
@@ -26,6 +28,27 @@ resample_n = 160
 
 # the path of calculate features saving csv
 features_path = "data"
+
+# the path for analyzing all features
+all_features_path = "analyze_features"
+
+# the path of select features path
+select_features_path = os.path.join(all_features_path, "select_features")
+
+# the path of classify result
+classify_path = os.path.join(all_features_path, "classify")
+
+# the path of ml model
+classify_model_path = os.path.join(all_features_path, "model")
+
+# the path of png
+classify_image_path = os.path.join(all_features_path, "image")
+
+# the path of mrmr
+classify_mrmr_path = os.path.join(all_features_path, "mrmr")
+
+# the path of classify detail result
+classify_detail_path = os.path.join(classify_path, "info")
 
 
 

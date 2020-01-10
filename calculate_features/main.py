@@ -3,7 +3,7 @@
 import os
 import mne
 import calculate_features.check_file as check_file
-import calculate_features.eeg_calculate_flinear_features as linear_feayures
+import calculate_features.eeg_calculate_linear_features as linear_feayures
 import calculate_features.eeg_features_psd as psd
 import calculate_features.eeg_features_dfa as dfa
 import calculate_features.eeg_features_hfd as hfd
@@ -142,27 +142,29 @@ def readData(filePath):
     return control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab
 
 
-control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab = readData('/home/rbai/eegData')
 
-print(counter_cc, counter_pp, counter_c, counter_p, ab)
-print('control: ' + str(len(control_raw)))
-print('patient: ' + str(len(patient_raw)))
+if __name__ == "__main__":
+    control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab = readData('/home/rbai/eegData')
 
-print("calculate features ...")
-print("linear festures ...")
-linear_feayures.eeg_linear_features(control_raw.copy(), patient_raw.copy())
-print("psd ...")
-psd.eeg_psd(control_raw.copy(), patient_raw.copy())
-print("dfa ...")
-dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
-print("dfa ...")
-dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
-print("hfd ...")
-hfd.eeg_hfd(control_raw.copy(), patient_raw.copy())
-print("hjorth ...")
-hjorth.eeg_hjorth(control_raw.copy(), patient_raw.copy())
-print("spectral_entropy ...")
-sp.eeg_spectral_entropy(control_raw.copy(), patient_raw.copy())
-print("pfd ...")
-pfd.eeg_pfd(control_raw.copy(), patient_raw.copy())
-print("end features ...")
+    print(counter_cc, counter_pp, counter_c, counter_p, ab)
+    print('control: ' + str(len(control_raw)))
+    print('patient: ' + str(len(patient_raw)))
+
+    print("calculate features ...")
+    print("linear festures ...")
+    linear_feayures.eeg_linear_features(control_raw.copy(), patient_raw.copy())
+    print("psd ...")
+    psd.eeg_psd(control_raw.copy(), patient_raw.copy())
+    print("dfa ...")
+    dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
+    print("dfa ...")
+    dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
+    print("hfd ...")
+    hfd.eeg_hfd(control_raw.copy(), patient_raw.copy())
+    print("hjorth ...")
+    hjorth.eeg_hjorth(control_raw.copy(), patient_raw.copy())
+    print("spectral_entropy ...")
+    sp.eeg_spectral_entropy(control_raw.copy(), patient_raw.copy())
+    print("pfd ...")
+    pfd.eeg_pfd(control_raw.copy(), patient_raw.copy())
+    print("end features ...")

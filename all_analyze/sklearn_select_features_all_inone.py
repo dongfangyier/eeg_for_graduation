@@ -1,61 +1,73 @@
 import pandas as pd
-from tsfresh.utilities.dataframe_functions import impute
 from tsfresh import extract_features, select_features
 from sklearn.feature_selection import SelectFromModel, VarianceThreshold, SelectKBest, chi2
 from sklearn.ensemble import ExtraTreesClassifier
 import numpy as np
 from sklearn.svm import LinearSVC
-from sklearn import svm
-from sklearn.externals import joblib
-from sklearn.svm import SVR
-from sklearn import linear_model
-from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
+import CONST
+import os
+import all_analyze.get_dataframe as get_dataframe
 
 
 '''
-特征选择
+features selected
 '''
 
 
-def load_data(name='all_analyze/data/all_in_one_data.csv'):
-    df = pd.read_csv(name)
-    Y = np.array(df['type'])
-    del df['type']
-    X = df
-    print(X)
+def load_data():
+    """
+    load all data and split it, only choose 30% data for select features
+    :param name:
+    :return:
+    """
+    df, Y = get_dataframe.read_file()
 
-    train_X, test_X, train_y, test_y = train_test_split(X,
+    train_X, test_X, train_y, test_y = train_test_split(df,
                                                         Y,
                                                         test_size=0.3,
                                                         random_state=0)
     print(train_X)
     print(train_y)
     train_X = train_X.reset_index(drop=True)
-    train_X.to_csv('all_analyze/data/train_x.csv', index=False)
-    pd.DataFrame(train_y).to_csv('all_analyze/data/train_y.csv', index=False, header=0)
-    test_X = test_X.reset_index(drop=True)
-    test_X.to_csv('all_analyze/data/test_x.csv', index=False)
-    pd.DataFrame(test_y).to_csv('all_analyze/data/test_y.csv', index=False, header=0)
+
+    # ifdebug
+    # train_X.to_csv('all_analyze/data/train_x.csv', index=False)
+    # pd.DataFrame(train_y).to_csv('all_analyze/data/train_y.csv', index=False, header=0)
+    # test_X = test_X.reset_index(drop=True)
+    # test_X.to_csv('all_analyze/data/test_x.csv', index=False)
+    # pd.DataFrame(test_y).to_csv('all_analyze/data/test_y.csv', index=False, header=0)
 
     return train_X, train_y
 
 
 # 从文件读取feature,在已经保存全部特征的情况下使用
 def _select_features(extracted_features, y):
+    """
+    select features using tsfresh's function which is depending on fdr
+    :param extracted_features:
+    :param y:
+    :return:
+    """
     print(extracted_features)
     print('select start...')
 
     # 选取较相关的特征
     # 可选属性 fdr_level = 0.05 ?
-    features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=0.2, ml_task='classification')
+    features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=0.05, ml_task='classification')
     print(features_filtered)
-    features_filtered.to_csv('all_analyze/select_features/tsfresh_filteredFeatures.csv')
+    features_filtered.to_csv(os.path.join(CONST.select_features_path, "tsfresh_filteredFeatures.csv"))
     print('select end')
 
 
 # test sklearn SelectFromModel
 def test_sklearn_SelectFromModel(extracted_features, y):
+    """
+    select features using linear mode
+    :param extracted_features:
+    :param y:
+    :return:
+    """
     cols = extracted_features.columns.values.tolist()
     print('select start...')
 
@@ -70,11 +82,17 @@ def test_sklearn_SelectFromModel(extracted_features, y):
     print(np.array(features_filtered))
 
     df = pd.DataFrame(features_filtered, columns=cols)
-    df.to_csv('all_analyze/select_features/test_sklearn_SelectFromModel.csv')
+    df.to_csv(os.path.join(CONST.select_features_path, "test_sklearn_SelectFromModel.csv"))
 
 
 # test sklearn ExtraTreesClassifier
 def test_sklearn_ExtraTreesClassifier(extracted_features, y):
+    """
+    select features using tree mode
+    :param extracted_features:
+    :param y:
+    :return:
+    """
     cols = extracted_features.columns.values.tolist()
     print('select start...')
 
@@ -90,11 +108,17 @@ def test_sklearn_ExtraTreesClassifier(extracted_features, y):
     print(np.array(features_filtered))
 
     df = pd.DataFrame(features_filtered, columns=cols)
-    df.to_csv('all_analyze/select_features/test_sklearn_ExtraTreesClassifier.csv')
+    df.to_csv(os.path.join(CONST.select_features_path, "test_sklearn_ExtraTreesClassifier.csv"))
 
 
 # test
 def get_cols(x, y):
+    """
+    get columns depend on index
+    :param x:
+    :param y:
+    :return:
+    """
     cols = []
     for i in range(len(y)):
         if y[i]:
@@ -104,6 +128,12 @@ def get_cols(x, y):
 
 # test sklearn VarianceThreshold
 def test_sklearn_VarianceThreshold(extracted_features, y):
+    """
+    remove low variance features(maybe 0.6 is suitable),this function only leave a temp result
+    :param extracted_features:
+    :param y:
+    :return:
+    """
     cols = extracted_features.columns.values.tolist()
     print('select start...')
 
@@ -117,11 +147,18 @@ def test_sklearn_VarianceThreshold(extracted_features, y):
     print(np.array(features_filtered))
 
     df = pd.DataFrame(features_filtered, columns=cols)
-    df.to_csv('all_analyze/select_features/test_sklearn_VarianceThreshold.csv')
+    df.to_csv(os.path.join(CONST.select_features_path, "test_sklearn_VarianceThreshold.csv"))
 
 
 def test_select_features_VarianceThreshold(y,
-                                           extracted_features_name='all_analyze/select_features/test_sklearn_VarianceThreshold.csv'):
+                                           extracted_features_name=os.path.join(CONST.select_features_path, "test_sklearn_VarianceThreshold.csv")):
+    """
+    select features using tsfresh's function which is depending on fdr
+    this function use the result of test_sklearn_VarianceThreshold
+    :param y:
+    :param extracted_features_name:
+    :return:
+    """
     # 全部特征
     extracted_features = pd.read_csv(extracted_features_name)
     del extracted_features['Unnamed: 0']
@@ -133,11 +170,15 @@ def test_select_features_VarianceThreshold(y,
     # 可选属性 fdr_level = 0.05 ?
     features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=0.2, ml_task='classification')
     print(features_filtered)
-    features_filtered.to_csv('all_analyze/select_features/select_features_VarianceThreshold.csv')
+    features_filtered.to_csv(os.path.join(CONST.select_features_path, "select_features_VarianceThreshold.csv"))
     print('select end')
 
 
 def start():
+    """
+    main function in this script for select features
+    :return:
+    """
     print('start ...')
     extracted_features, y = load_data()
 
@@ -155,4 +196,3 @@ def start():
     test_select_features_VarianceThreshold(y)
 
 
-start()
