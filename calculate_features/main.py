@@ -157,8 +157,6 @@ if __name__ == "__main__":
     psd.eeg_psd(control_raw.copy(), patient_raw.copy())
     print("dfa ...")
     dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
-    print("dfa ...")
-    dfa.eeg_dfa(control_raw.copy(), patient_raw.copy())
     print("hfd ...")
     hfd.eeg_hfd(control_raw.copy(), patient_raw.copy())
     print("hjorth ...")

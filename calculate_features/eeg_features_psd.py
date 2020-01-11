@@ -43,8 +43,7 @@ def raw_data_info():
     print()
     channel_names = []
     for i in raw.info['ch_names']:
-        if i != 'Oz':
-            if i != 'ECG':
+        if i not in CONST.bad_channel_name:
                 channel_names.append(i)
 
     return channel_names
