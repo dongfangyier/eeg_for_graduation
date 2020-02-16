@@ -1,2 +1,2 @@
 # eeg_for_graduation
-### using machine learning to detect depression by EEG
+### 为毕业设计准备的数据分析部分，尚未完成。
