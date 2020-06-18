@@ -23,6 +23,7 @@ def read_file(path=os.path.join(CONST.all_features_path, 'all_in_one_data.csv'))
                 del df[x]
     y = df['type']
     del df['type']
+    del df['AAeid']
     print(df)
 
     return df, np.array(y)

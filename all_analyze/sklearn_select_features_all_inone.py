@@ -25,7 +25,7 @@ def load_data():
 
     train_X, test_X, train_y, test_y = train_test_split(df,
                                                         Y,
-                                                        test_size=0.3,
+                                                        test_size=0.01,
                                                         random_state=0)
     print(train_X)
     print(train_y)
@@ -54,8 +54,7 @@ def _select_features(extracted_features, y):
 
     # 选取较相关的特征
     # 可选属性 fdr_level = 0.05 ?
-    features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=0.05, ml_task='classification')
-    print(features_filtered)
+    features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=8.8, ml_task='classification')
     features_filtered.to_csv(os.path.join(CONST.select_features_path, "tsfresh_filteredFeatures.csv"))
     print('select end')
 
@@ -168,7 +167,7 @@ def test_select_features_VarianceThreshold(y,
 
     # 选取较相关的特征
     # 可选属性 fdr_level = 0.05 ?
-    features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=0.2, ml_task='classification')
+    features_filtered = select_features(extracted_features, y, n_jobs=1, fdr_level=8.8, ml_task='classification')
     print(features_filtered)
     features_filtered.to_csv(os.path.join(CONST.select_features_path, "select_features_VarianceThreshold.csv"))
     print('select end')
@@ -181,18 +180,20 @@ def start():
     """
     print('start ...')
     extracted_features, y = load_data()
+    print(extracted_features)
+    print(y)
 
     print('filter')
-    _select_features(extracted_features, y)
+    _select_features(extracted_features.copy(), y.copy())
 
     print('linear')
-    test_sklearn_SelectFromModel(extracted_features, y)
+    test_sklearn_SelectFromModel(extracted_features.copy(), y.copy())
 
     print('tree')
-    test_sklearn_ExtraTreesClassifier(extracted_features, y)
+    test_sklearn_ExtraTreesClassifier(extracted_features.copy(), y.copy())
 
     print('varianceThreshold')
-    test_sklearn_VarianceThreshold(extracted_features, y)
-    test_select_features_VarianceThreshold(y)
+    test_sklearn_VarianceThreshold(extracted_features.copy(), y.copy())
+    test_select_features_VarianceThreshold(y.copy())
 
 

@@ -5,6 +5,7 @@ import mne
 import check_file
 import cnn_lstm.preprocess_data as preprocess_data
 import cnn_lstm.deep_learn as deep_learn
+import CONST
 
 
 """
@@ -140,7 +141,7 @@ def readData(filePath):
 
 
 if __name__ == "__main__":
-    control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab = readData('/home/rbai/eegData')
+    control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab = readData(CONST.eeg_file_path)
 
     print(counter_cc, counter_pp, counter_c, counter_p, ab)
     print('control: ' + str(len(control_raw)))

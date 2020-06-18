@@ -23,8 +23,8 @@ columns_rec = ['method', 'count', 'svm_recall', 'knn_recall', 'tree_recall',
 columns_acc = ['method', 'count', 'svm_accuracy', 'knn_accuracy', 'tree_accuracy', 'bayes_accuracy',
                'forest_accuracy', 'logistic_accuracy']
 
-columns_spe = ['method', 'count', 'svm_specificity', 'knn_specificity', 'tree_specificity', 'bayes_specificity',
-               'forest_specificity', 'logistic_specificity']
+columns_pre = ['method', 'count', 'svm_precision', 'knn_precision', 'tree_precision', 'bayes_precision',
+               'forest_precision', 'logistic_precision']
 
 methods = ['linear', 'tree', 'tsfresh_select', 'VarianceThreshold_tsfresh_select']
 
@@ -50,12 +50,12 @@ def start():
     df, y = get_dataframe.read_file()
     df_rec = pd.DataFrame(columns=columns_rec)
     df_acc = pd.DataFrame(columns=columns_acc)
-    df_pre = pd.DataFrame(columns=columns_spe)
+    df_pre = pd.DataFrame(columns=columns_pre)
 
     '''
     all
     '''
-    rec, acc,spe = get_c_v_result.get_res('select_features', 'test', np.array(df.copy()), y)
+    rec, acc,pre = get_c_v_result.get_res('select_features', 'test', np.array(df.copy()), y)
     temp = pd.Series({'method': 'all_features', 'count': str(len(np.array(df.copy())[0]))})
     temp = pd.concat([temp, rec])
     df_rec.loc[len(df_rec)] = temp
@@ -67,7 +67,7 @@ def start():
     print(df_acc)
 
     temp = pd.Series({'method': 'all_features', 'count': str(len(np.array(df.copy())[0]))})
-    temp = pd.concat([temp, spe])
+    temp = pd.concat([temp, pre])
     df_pre.loc[len(df_pre)] = temp
     print(df_pre)
 
@@ -77,7 +77,7 @@ def start():
 
     for i in range(len(methods)):
         X = get_features(df.copy(), os.path.join(CONST.select_features_path, file_names[i]))
-        rec, acc, spe = get_c_v_result.get_res('select_features', str(i), np.array(X.copy()), y)
+        rec, acc, pre = get_c_v_result.get_res('select_features', str(i), np.array(X.copy()), y)
         temp = pd.Series({'method': methods[i], 'count': len(np.array(X)[0])})
         temp = pd.concat([temp, rec])
         df_rec.loc[len(df_rec)] = temp
@@ -89,7 +89,7 @@ def start():
         print(df_acc)
 
         temp = pd.Series({'method': methods[i], 'count': len(np.array(X)[0])})
-        temp = pd.concat([temp, spe])
+        temp = pd.concat([temp, pre])
         df_pre.loc[len(df_pre)] = temp
         print(df_pre)
 

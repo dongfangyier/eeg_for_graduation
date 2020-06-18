@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from ipyparallel import joblib
+from sklearn.externals import joblib
 from sklearn.naive_bayes import GaussianNB
 from sklearn import tree
 from sklearn import svm
@@ -12,6 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 import CONST
 import os
+from imblearn.over_sampling import SMOTE
 
 '''
 tools for classify
@@ -19,10 +20,15 @@ tools for classify
 
 # record max accurary
 forest_acc = 0
-
+IS_SOMIT = False
 
 # 贝叶斯
 def naive_bayes_GaussianNB(x_train, x_test, y_train, y_test):
+    if IS_SOMIT:
+        smo = SMOTE()
+        x_train, y_train = smo.fit_sample(x_train, y_train)
+
+
     # 将数据缩放到（0，1）
     scaling = MinMaxScaler(feature_range=(0, 1)).fit(x_train)
     x_train = scaling.transform(x_train)
@@ -43,6 +49,10 @@ def naive_bayes_GaussianNB(x_train, x_test, y_train, y_test):
 
 # 决策树
 def decide_tree(x_train, x_test, y_train, y_test):
+    if IS_SOMIT:
+        smo = SMOTE()
+        x_train, y_train = smo.fit_sample(x_train, y_train)
+
     # 将数据缩放到（0，1）
 
     scaling = MinMaxScaler(feature_range=(0, 1)).fit(x_train)
@@ -64,6 +74,10 @@ def decide_tree(x_train, x_test, y_train, y_test):
 
 # svm
 def linear_svm(x_train, x_test, y_train, y_test):
+    if IS_SOMIT:
+        smo = SMOTE()
+        x_train, y_train = smo.fit_sample(x_train, y_train)
+
     # 将数据缩放到（0，1）
     scaling = MinMaxScaler(feature_range=(0, 1)).fit(x_train)
     x_train = scaling.transform(x_train)
@@ -84,6 +98,10 @@ def linear_svm(x_train, x_test, y_train, y_test):
 
 # knn
 def k_n_n(x_train, x_test, y_train, y_test):
+    if IS_SOMIT:
+        smo = SMOTE()
+        x_train, y_train = smo.fit_sample(x_train, y_train)
+
     # 将数据缩放到（0，1）
     scaling = MinMaxScaler(feature_range=(0, 1)).fit(x_train)
     x_train = scaling.transform(x_train)
@@ -104,6 +122,10 @@ def k_n_n(x_train, x_test, y_train, y_test):
 
 # 随机森林
 def random_forest(x_train, x_test, y_train, y_test):
+    if IS_SOMIT:
+        smo = SMOTE()
+        x_train, y_train = smo.fit_sample(x_train, y_train)
+
     # 将数据缩放到（0，1）
     scaling = MinMaxScaler(feature_range=(0, 1)).fit(x_train)
     x_train = scaling.transform(x_train)
@@ -131,6 +153,10 @@ def random_forest(x_train, x_test, y_train, y_test):
 
 # 逻辑回归
 def logistic_regression(x_train, x_test, y_train, y_test):
+    if IS_SOMIT:
+        smo = SMOTE()
+        x_train, y_train = smo.fit_sample(x_train, y_train)
+
     # 将数据缩放到（0，1）
     scaling = MinMaxScaler(feature_range=(0, 1)).fit(x_train)
     x_train = scaling.transform(x_train)
@@ -163,13 +189,13 @@ def k_cv_3(name, random, x, y):
     colums_accuracy = ['svm_accuracy', 'knn_accuracy', 'tree_accuracy', 'bayes_accuracy',
                        'forest_accuracy', 'logistic_accuracy']
 
-    colums_specificity = ['svm_specificity', 'knn_specificity', 'tree_specificity', 'bayes_specificity',
-                          'forest_specificity', 'logistic_specificity']
+    colums_precision = ['svm_precision', 'knn_precision', 'tree_precision', 'bayes_precision',
+                          'forest_precision', 'logistic_precision']
 
     acc_pd = pd.DataFrame(columns=colums)
     acc_rec = pd.DataFrame(columns=colums_recall)
     acc_acc = pd.DataFrame(columns=colums_accuracy)
-    acc_pre = pd.DataFrame(columns=colums_specificity)
+    acc_pre = pd.DataFrame(columns=colums_precision)
 
     kf = KFold(n_splits=5, shuffle=True)
     for train_index, test_index in kf.split(x):
@@ -248,7 +274,7 @@ def k_cv_3(name, random, x, y):
     acc_pd.loc['mean'] = acc_pd.mean()
     # ifdebug
     acc_pd.to_csv(os.path.join(CONST.classify_detail_path,
-                               'classify/result/classify_' + str(name) + '_c_k_' + str(random) + '.csv'))
+                               'classify_' + str(name) + '_c_k_' + str(random) + '.csv'))
     return acc_pd.mean(), acc_rec.mean(), acc_acc.mean(), acc_pre.mean()
 
 

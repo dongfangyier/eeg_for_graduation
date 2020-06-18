@@ -3,6 +3,7 @@
 import os
 import mne
 import check_file
+import CONST
 import calculate_features.eeg_calculate_linear_features as linear_feayures
 import calculate_features.eeg_features_psd as psd
 import calculate_features.eeg_features_dfa as dfa
@@ -144,7 +145,7 @@ def readData(filePath):
 
 
 if __name__ == "__main__":
-    control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab = readData('/home/rbai/eegData')
+    control_raw, patient_raw, counter_c, counter_p, counter_cc, counter_pp, ab = readData(CONST.eeg_file_path)
 
     print(counter_cc, counter_pp, counter_c, counter_p, ab)
     print('control: ' + str(len(control_raw)))

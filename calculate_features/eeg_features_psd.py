@@ -100,8 +100,9 @@ def eeg_psd(control_raw, patient_raw):
     columns = channel_names.copy()
     columns.insert(0, 'groupId')
     columns.insert(0, 'id')
-    columns = columns[:-1]
+    # columns = columns[:-1]
     columns.append('average')
+
     df_c_delta = pd.DataFrame(columns=columns)
     df_c_theta = pd.DataFrame(columns=columns)
     df_c_alpha1 = pd.DataFrame(columns=columns)
@@ -168,12 +169,12 @@ def eeg_psd(control_raw, patient_raw):
 
         df_c_gamma.loc[len(df_c_gamma)] = temp
 
-    df_c_delta.to_csv('psd_c_delta.csv', index=True)
-    df_c_theta.to_csv('psd_c_theta.csv', index=True)
-    df_c_alpha1.to_csv('psd_c_alpha1.csv', index=True)
-    df_c_alpha2.to_csv('psd_c_alpha2.csv', index=True)
-    df_c_beta.to_csv('psd_c_beta.csv', index=True)
-    df_c_gamma.to_csv('psd_c_gamma.csv', index=True)
+    df_c_delta.to_csv(os.path.join(CONST.features_path,'psd_c_delta.csv'), index=True)
+    df_c_theta.to_csv(os.path.join(CONST.features_path,'psd_c_theta.csv'), index=True)
+    df_c_alpha1.to_csv(os.path.join(CONST.features_path,'psd_c_alpha1.csv'), index=True)
+    df_c_alpha2.to_csv(os.path.join(CONST.features_path,'psd_c_alpha2.csv'), index=True)
+    df_c_beta.to_csv(os.path.join(CONST.features_path,'psd_c_beta.csv'), index=True)
+    df_c_gamma.to_csv(os.path.join(CONST.features_path,'psd_c_gamma.csv'), index=True)
 
     counter = 0
     for (eid, raw) in patient_raw.items():
